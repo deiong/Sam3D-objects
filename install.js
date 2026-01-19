@@ -25,8 +25,9 @@ module.exports = {
                 path: "app",
                 env: { "PIP_EXTRA_INDEX_URL": "https://pypi.ngc.nvidia.com https://download.pytorch.org/whl/cu121" },
                 message: [
-                    "pip install -e '.[dev]'",
-                    "pip install -e '.[p3d]'"
+                    "python -m pip install --upgrade pip",
+                    "pip install -e .[dev]",
+                    "pip install -e .[p3d]"
                 ]
             }
         },
@@ -36,7 +37,7 @@ module.exports = {
                 venv: "env",
                 path: "app",
                 env: { "PIP_FIND_LINKS": "https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.1_cu121.html" },
-                message: "pip install -e '.[inference]'"
+                message: "pip install -e .[inference]"
             }
         },
         {
@@ -83,7 +84,7 @@ module.exports = {
                 path: "app",
                 message: [
                     "pip install 'huggingface-hub[cli]<1.0'",
-                    "hf download --repo-type model --local-dir checkpoints/hf-download --max-workers 1 facebook/sam-3d-objects",
+                    "huggingface-cli download --repo-type model --local-dir checkpoints/hf-download --max-workers 1 facebook/sam-3d-objects",
                     "mv checkpoints/hf-download/checkpoints checkpoints/hf",
                     "rm -rf checkpoints/hf-download"
                 ]
@@ -101,7 +102,7 @@ module.exports = {
             method: "shell.run",
             params: {
                 path: "app/checkpoints/sam2",
-                message: "hf download facebook/sam2-hiera-large --local-dir=checkpoints"
+                message: "huggingface-cli download facebook/sam2-hiera-large --local-dir=checkpoints"
             }
         }
     ]

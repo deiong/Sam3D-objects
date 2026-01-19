@@ -1,3 +1,4 @@
+
 // install.js
 module.exports = {
     requires: {
@@ -15,7 +16,7 @@ module.exports = {
         {
             method: "shell.run",
             params: {
-                message: "conda env create -f app/environments/default.yml --name env"  // Use conda; replace with mamba if preferred
+                message: "conda create -n env python=3.10 -y"  // Simple Windows-friendly env, no Linux yml
             }
         },
         {
@@ -26,8 +27,9 @@ module.exports = {
                 env: { "PIP_EXTRA_INDEX_URL": "https://pypi.ngc.nvidia.com https://download.pytorch.org/whl/cu121" },
                 message: [
                     "python -m pip install --upgrade pip",
-                    "pip install -e .[dev]",
-                    "pip install -e .[p3d]"
+                    "pip install -e .",
+                    "pip install -r requirements.dev.txt",
+                    "pip install -r requirements.p3d.txt"
                 ]
             }
         },
@@ -37,15 +39,7 @@ module.exports = {
                 venv: "env",
                 path: "app",
                 env: { "PIP_FIND_LINKS": "https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.1_cu121.html" },
-                message: "pip install -e .[inference]"
-            }
-        },
-        {
-            method: "shell.run",
-            params: {
-                venv: "env",
-                path: "app",
-                message: "./patching/hydra"
+                message: "pip install -r requirements.inference.txt"
             }
         },
         {
@@ -85,8 +79,8 @@ module.exports = {
                 message: [
                     "pip install 'huggingface-hub[cli]<1.0'",
                     "huggingface-cli download --repo-type model --local-dir checkpoints/hf-download --max-workers 1 facebook/sam-3d-objects",
-                    "mv checkpoints/hf-download/checkpoints checkpoints/hf",
-                    "rm -rf checkpoints/hf-download"
+                    "move checkpoints\\hf-download\\checkpoints checkpoints\\hf",
+                    "rmdir /s /q checkpoints\\hf-download"  // Windows move and rmdir
                 ]
             }
         },
